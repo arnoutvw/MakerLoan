@@ -20,6 +20,6 @@ public class App {
 		System.out.println(it);
 		System.out.println(oop);
 		System.out.println(loan);
-		
 	}
+
 }
