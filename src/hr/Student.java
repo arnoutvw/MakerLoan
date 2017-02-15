@@ -1,24 +1,25 @@
 package hr;
 
 import java.util.regex.*;
+import java.util.ArrayList;
 import administration.Course;
 import administration.Department;
 
 public class Student extends Person {
 	// Fields
 	private String studentID;
-	private Course course;
+	private ArrayList<Course> courseList;
 	private static int IDIndex = 0;
 	
 	// Constructors
-	public Student(String name, String surName, String phone, Department department, Course course) {
+	public Student(String name, String surName, String phone, Department department, ArrayList<Course> courseList) {
 		super(name, surName, phone, department);
 		this.studentID = generateStudentID();
-		this.course = course;
+		this.courseList = courseList;
 	}
 	
 	public Student(String name, String surName, String phone, Department department) {
-		this(name, surName, phone, department, null);
+		this(name, surName, phone, department, new ArrayList<>());
 	}
 	
 	public Student(String name, String surName, String phone) {
@@ -29,18 +30,18 @@ public class Student extends Person {
 		this(name, surName, null);
 	}
 	
-	public Student(Person person, Course course) {
+	public Student(Person person, ArrayList<Course> courseList) {
 		super(person);
 		this.studentID = generateStudentID();
-		this.course = course;
+		this.courseList = courseList;
 	}
 	
 	public Student(Person person) {
-		this(person, null);
+		this(person, new ArrayList<>());
 	}
 	
 	public Student(Student student) {
-		this(student, student.getCourse());
+		this(student, student.getCourseList());
 	}
 
 	// Getters
@@ -48,8 +49,8 @@ public class Student extends Person {
 		return studentID;
 	}
 
-	public Course getCourse() {
-		return course;
+	public ArrayList<Course> getCourseList() {
+		return courseList;
 	}
 
 	//Setters
@@ -60,10 +61,6 @@ public class Student extends Person {
 		} else {
 			throw new IllegalArgumentException("Incorrect studentID format.");
 		}
-	}
-	
-	public void setCourse(Course course) {
-		this.course = course;
 	}
 	
 	// Methods
@@ -80,13 +77,13 @@ public class Student extends Person {
 	@Override
 	public String toString() {
 		return String.format(
-				"%1$s[name=%2$s, surName=%3$s, phone=%4$s, department=%5$s, studentID=%6$s, course=%7$s]",
+				"%1$s[name=%2$s, surName=%3$s, phone=%4$s, department=%5$s, studentID=%6$s, courses=%7$s]",
 				getClass().getSimpleName(),
 				getName(),
 				getSurName(),
 				getPhone(),
 				getDepartment().getName(),
 				studentID,
-				course.getName());
+				courseList);
 	}
 }

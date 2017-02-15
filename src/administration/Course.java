@@ -1,20 +1,18 @@
 package administration;
 
-public class Course {
+public abstract class Course {
 	// Fields
 	private String name;
 	private String courseID;
 	private Department department;
+	private final String evaluation;
 	
 	// Constructors
-	public Course(String name, String courseID, Department department) {
+	protected Course(String name, String courseID, Department department, String evaluation) {
 		this.name = name;
 		this.courseID = courseID;
 		this.department = department;
-	}
-	
-	public Course(Course course) {
-		this(course.getName(), course.getCourseID(), course.getDepartment());
+		this.evaluation = evaluation;
 	}
 
 	// Getters
@@ -28,6 +26,10 @@ public class Course {
 
 	public Department getDepartment() {
 		return department;
+	}
+	
+	public String getEvaluation() {
+		return evaluation;
 	}
 
 	// Setters

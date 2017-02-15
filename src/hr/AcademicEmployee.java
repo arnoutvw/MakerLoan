@@ -6,7 +6,6 @@ public class AcademicEmployee extends Employee {
 	// Constructors
 	public AcademicEmployee(String name, String surName, String phone, Department department) {
 		super(name, surName, phone, department);
-		// TODO Auto-generated constructor stub
 	}
 
 	public AcademicEmployee(String name, String surName, String phone) {

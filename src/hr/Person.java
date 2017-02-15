@@ -2,6 +2,7 @@ package hr;
 
 import administration.Department;
 
+
 /**
  * A person with a name, surName and phone number that belongs to a department.
  * @author KIRODE
@@ -13,7 +14,6 @@ public class Person {
 	private String surName;
 	private String phone;
 	private Department department;
-	
 	
 	// Constructors
 	/**
@@ -161,7 +161,7 @@ public class Person {
 
 	/**
 	 * Sets this persons department to the argument department.
-	 * @param department The new deparment of this person.
+	 * @param department The new deparment of this person. 
 	 */
 	public void setDepartment(Department department) {
 		this.department = department;
