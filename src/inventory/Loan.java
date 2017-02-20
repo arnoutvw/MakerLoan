@@ -1,6 +1,8 @@
 package inventory;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import hr.Person;
 
@@ -9,18 +11,18 @@ public class Loan {
 	private Item item;
 	private Person person;
 	private GregorianCalendar loanDate;
+	private static List<Loan> loans = new ArrayList<>();
 	
 	// Constructors
 	public Loan(Item item, Person person, GregorianCalendar loanDate) {
 		this.item = item;
 		this.person = person;
 		this.loanDate = loanDate;
+		loans.add(this);
 	}
 	
 	public Loan(Loan loan) {
-		item = loan.getItem();
-		person = loan.getPerson();
-		loanDate = loan.getLoanDate();
+		this(loan.getItem(), loan.getPerson(), loan.getLoanDate());
 	}
 
 	// Getters
@@ -34,6 +36,10 @@ public class Loan {
 
 	public GregorianCalendar getLoanDate() {
 		return loanDate;
+	}
+	
+	public static List<Loan> getLoans() {
+		return loans;
 	}
 
 	// Setters

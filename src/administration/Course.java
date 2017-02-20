@@ -1,11 +1,15 @@
 package administration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Course {
 	// Fields
 	private String name;
 	private String courseID;
 	private Department department;
 	private final String evaluation;
+	private static List<Course> courses = new ArrayList<>();
 	
 	// Constructors
 	protected Course(String name, String courseID, Department department, String evaluation) {
@@ -13,6 +17,7 @@ public abstract class Course {
 		this.courseID = courseID;
 		this.department = department;
 		this.evaluation = evaluation;
+		courses.add(this);
 	}
 
 	// Getters
@@ -30,6 +35,10 @@ public abstract class Course {
 	
 	public String getEvaluation() {
 		return evaluation;
+	}
+	
+	public static List<Course> getCourses() {
+		return courses;
 	}
 
 	// Setters

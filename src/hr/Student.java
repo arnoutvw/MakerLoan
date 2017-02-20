@@ -2,20 +2,25 @@ package hr;
 
 import java.util.regex.*;
 import java.util.ArrayList;
+import java.util.List;
+
 import administration.Course;
 import administration.Department;
 
 public class Student extends Person {
 	// Fields
 	private String studentID;
-	private ArrayList<Course> courseList;
+	private List<Course> courseList;
+	
+	private static ArrayList<Student> studentList = new ArrayList<>();
 	private static int IDIndex = 0;
 	
 	// Constructors
-	public Student(String name, String surName, String phone, Department department, ArrayList<Course> courseList) {
+	public Student(String name, String surName, String phone, Department department, List<Course> courseList) {
 		super(name, surName, phone, department);
 		this.studentID = generateStudentID();
-		this.courseList = courseList;
+		this.courseList = new ArrayList<>(courseList);
+		studentList.add(this);
 	}
 	
 	public Student(String name, String surName, String phone, Department department) {
@@ -30,10 +35,11 @@ public class Student extends Person {
 		this(name, surName, null);
 	}
 	
-	public Student(Person person, ArrayList<Course> courseList) {
+	public Student(Person person, List<Course> courseList) {
 		super(person);
 		this.studentID = generateStudentID();
-		this.courseList = courseList;
+		this.courseList = new ArrayList<>(courseList);
+		studentList.add(this);
 	}
 	
 	public Student(Person person) {
@@ -49,7 +55,7 @@ public class Student extends Person {
 		return studentID;
 	}
 
-	public ArrayList<Course> getCourseList() {
+	public List<Course> getCourseList() {
 		return courseList;
 	}
 

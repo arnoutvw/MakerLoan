@@ -1,22 +1,23 @@
 package inventory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Item {
 	// Fields
 	private String name;
 	private int itemID;
-	private int amount;
+	private static List<Item> items = new ArrayList<>();
 	
 	// Constructors
-	public Item(String name, int itemID, int amount) {
+	public Item(String name, int itemID) {
 		this.name = name;
 		this.itemID = itemID;
-		this.amount = amount;
+		items.add(this);
 	}
 	
 	public Item(Item item) {
-		name = item.getName();
-		itemID = item.getItemID();
-		amount = item.getAmount();
+		this(item.getName(), item.getItemID());
 	}
 
 	// Getters
@@ -28,10 +29,10 @@ public class Item {
 		return itemID;
 	}
 
-	public int getAmount() {
-		return amount;
+	public static List<Item> getItems() {
+		return items;
 	}
-
+	
 	// Setters
 	public void setName(String name) {
 		this.name = name;
@@ -41,17 +42,12 @@ public class Item {
 		this.itemID = itemID;
 	}
 
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
-	
 	// Methods
 	@Override
 	public String toString() {
-		return String.format("%1$s[name=%2$s, itemID=%3$d, amount=%4$d]",
+		return String.format("%1$s[name=%2$s, itemID=%3$d]",
 				getClass().getSimpleName(),
 				name,
-				itemID,
-				amount);
+				itemID);
 	}
 }

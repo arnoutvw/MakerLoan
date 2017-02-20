@@ -1,14 +1,19 @@
 package administration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Department {
 	// Fields
 	private String name;
 	private String code;
+	private static List<Department> departments = new ArrayList<>();
 	
 	// Constructors
 	public Department(String name, String code) {
 		this.name = name;
 		this.code = code;
+		departments.add(this);
 	}
 	
 	public Department(Department department) {
@@ -22,6 +27,10 @@ public class Department {
 
 	public String getCode() {
 		return code;
+	}
+	
+	public static List<Department> getDepartments() {
+		return departments;
 	}
 
 	// Setters

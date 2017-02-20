@@ -1,5 +1,8 @@
 package hr;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import administration.Department;
 
 
@@ -8,12 +11,14 @@ import administration.Department;
  * @author KIRODE
  *
  */
-public class Person {
+public abstract class Person {
 	// Fields
 	private String name;
 	private String surName;
 	private String phone;
 	private Department department;
+	
+	private static List<Person> persons = new ArrayList<>();
 	
 	// Constructors
 	/**
@@ -30,6 +35,7 @@ public class Person {
 		this.surName = surName;
 		this.phone = phone;
 		this.department = department;
+		persons.add(this);
 	}
 	
 	/**
@@ -126,6 +132,10 @@ public class Person {
 	 */
 	public Department getDepartment() {
 		return department;
+	}
+	
+	public static List<Person> getPersons() {
+		return persons;
 	}
 
 
