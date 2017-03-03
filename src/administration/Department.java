@@ -45,8 +45,7 @@ public class Department {
 	// Methods
 	@Override
 	public String toString() {
-		return String.format("%1$s[name=%2$s, code=%3$s]",
-				getClass().getSimpleName(),
+		return String.format("%2$s: %1$s",
 				name,
 				code);
 	}
