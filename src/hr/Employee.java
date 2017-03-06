@@ -56,12 +56,11 @@ public class Employee extends Person {
 	
 	@Override
 	public String toString() {
-		return String.format("%1$s[name=%2$s, surName=%3$s, phone=%4$s, department=%5$s, employeeID=%6$s]",
-				getClass().getSimpleName(),
+		return String.format("Employee %5$s: %1$s %2$s  |  Phone: %3$s  -  Department: %4$s",
 				getName(),
 				getSurName(),
 				getPhone(),
-				getDepartment().getName(),
+				getDepartment() != null ? getDepartment().getName() : "",
 				employeeID);
 	}
 }

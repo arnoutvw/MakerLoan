@@ -57,10 +57,10 @@ public abstract class Course {
 	// Methods
 	@Override
 	public String toString() {
-		return String.format("%2$s: %1$s  -  Department: %3$s  -  Graded: %4$s",
+		return String.format("%2$s: %1$s  |  Department: %3$s  -  Graded: %4$s",
 				name,
 				courseID,
-				department.getName(),
+				department != null ? department.getName() : "",
 				getEvaluation());
 	}
 }

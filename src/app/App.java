@@ -13,8 +13,11 @@ public class App {
 	public static void main(String[] args) {
 		Department it = new Department("Informasjonsteknologi", "IT");
 		Course oop = new GradedCourse("Objektorientert programmering", "OOP", it);
+		new GradedCourse("Databaser", "DB", it);
+		
 		new Student("Kim Roar Stenvard", "Dehli", "46828919", it, Arrays.asList(new Course[]{oop}));
-		new AcademicEmployee("Per", "Bisseberg", "???", it);
+		new AcademicEmployee("Per", "Bisseberg", "", it);
+		
 		gui.MainFrame.main(args);
 	}
 

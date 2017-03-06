@@ -28,12 +28,13 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ItemListener;
+import java.util.List;
 import java.awt.event.ItemEvent;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
-import javax.swing.AbstractListModel;
+import javax.swing.JOptionPane;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
@@ -51,18 +52,10 @@ public class MainFrame extends JFrame {
 			EMPLOYEE
 	};
 	
-	private DefaultComboBoxModel<Department> departmentComboBoxModel = new DefaultComboBoxModel<Department>() {
-		
-		@Override
-		public Department getElementAt(int index) {
-			return Department.getDepartments().get(index);
-		}
-		
-		@Override
-		public int getSize() {
-			return Department.getDepartments().size();
-		}
-	};
+	private DepartmentComboBoxModel departmentComboBoxModel = new DepartmentComboBoxModel();
+	private DepartmentListModel departmentListModel = new DepartmentListModel();
+	private CourseListModel courseListModel = new CourseListModel();
+	private PersonListModel personListModel = new PersonListModel();
 	
 	private JPanel contentPane;
 	private JTextField txtDepartmentName;
@@ -90,6 +83,7 @@ public class MainFrame extends JFrame {
 	private JRadioButton rdbtnAdmin;
 	private JRadioButton rdbtnAcademic;
 
+	
 	/**
 	 * Launch the application.
 	 */
@@ -164,16 +158,26 @@ public class MainFrame extends JFrame {
 		JButton btnCreateDepartment = new JButton("Create");
 		btnCreateDepartment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Department(txtDepartmentName.getText(), txtDepartmentCode.getText());
-				
-				departmentList.updateUI();
-				
-				lstCourseDepartment.setSelectedIndex(-1);
-				lstStudentDepartment.setSelectedIndex(-1);
-				lstEmployeeDepartment.setSelectedIndex(-1);
-				
-				txtDepartmentName.setText("");
-				txtDepartmentCode.setText("");
+				try {
+					String name = txtDepartmentName.getText().trim();
+					String code = txtDepartmentCode.getText().trim();
+					
+					if (name.equals("") || code.equals("")) {
+						throw new RuntimeException("Fields cannot be empty!");
+					}
+					new Department(name, code);
+					
+					departmentListModel.fireExternalElementAdded();;
+					
+					lstCourseDepartment.setSelectedIndex(-1);
+					lstStudentDepartment.setSelectedIndex(-1);
+					lstEmployeeDepartment.setSelectedIndex(-1);
+					
+					txtDepartmentName.setText("");
+					txtDepartmentCode.setText("");
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
+				}
 			}
 		});
 		btnCreateDepartment.setBounds(12, 285, 97, 25);
@@ -212,19 +216,27 @@ public class MainFrame extends JFrame {
 		JButton btnCreateCourse = new JButton("Create");
 		btnCreateCourse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (rdbtnGraded.isSelected()) {
-					new GradedCourse(txtCourseName.getText(), txtCourseID.getText(),
-							(Department)lstCourseDepartment.getSelectedItem());
-				} else if (rdbtnUngraded.isSelected()){
-					new UngradedCourse(txtCourseName.getText(), txtCourseID.getText(),
-							(Department)lstCourseDepartment.getSelectedItem());
+				try {
+					String name = txtCourseName.getText().trim();
+					String id = txtCourseID.getText().trim();
+					Department department = (Department)lstCourseDepartment.getSelectedItem();
+					
+					if (name.equals("") || id.equals("") || lstCourseDepartment.getSelectedIndex() == -1) {
+						throw new RuntimeException("Fields cannot be empty!");
+					}
+					if (rdbtnGraded.isSelected()) {
+						new GradedCourse(name, id, department);
+					} else if (rdbtnUngraded.isSelected()){
+						new UngradedCourse(name, id, department);
+					}
+					courseListModel.fireExternalElementAdded();;
+					txtCourseName.setText("");
+					txtCourseID.setText("");
+					lstCourseDepartment.setSelectedIndex(-1);
+					rdbtnGraded.setSelected(true);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
 				}
-				courseList.updateUI();
-				lstStudentCourses.updateUI();
-				txtCourseName.setText("");
-				txtCourseID.setText("");
-				lstCourseDepartment.setSelectedIndex(-1);
-				rdbtnGraded.setSelected(true);
 			}
 		});
 		btnCreateCourse.setBounds(12, 285, 97, 25);
@@ -284,18 +296,28 @@ public class MainFrame extends JFrame {
 		JButton btnCreateStudent = new JButton("Create");
 		btnCreateStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Student(txtStudentName.getText(),
-						txtStudentSurname.getText(),
-						txtStudentPhone.getText(),
-						(Department)lstStudentDepartment.getSelectedItem(),
-						lstStudentCourses.getSelectedValuesList());
-				
-				personList.updateUI();
-				txtStudentName.setText("");
-				txtStudentSurname.setText("");
-				txtStudentPhone.setText("");
-				lstStudentDepartment.setSelectedIndex(-1);
-				lstStudentCourses.clearSelection();
+				try {
+					String name = txtStudentName.getText().trim();
+					String surname = txtStudentSurname.getText().trim();
+					String phone = txtStudentPhone.getText().trim();
+					Department department = (Department)lstStudentDepartment.getSelectedItem();
+					List<Course> courses = lstStudentCourses.getSelectedValuesList();
+					
+					if (name.equals("") || surname.equals("") || phone.equals("") || lstStudentDepartment.getSelectedIndex() == -1) {
+						throw new RuntimeException("Fields cannot be empty!");
+					}
+					
+					new Student(name, surname, phone, department, courses);
+					
+					personListModel.fireExternalElementAdded();
+					txtStudentName.setText("");
+					txtStudentSurname.setText("");
+					txtStudentPhone.setText("");
+					lstStudentDepartment.setSelectedIndex(-1);
+					lstStudentCourses.clearSelection();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
+				}
 			}
 		});
 		btnCreateStudent.setBounds(12, 285, 97, 25);
@@ -346,19 +368,7 @@ public class MainFrame extends JFrame {
 		studentPanel.add(scrStudentCourses);
 		
 		lstStudentCourses = new JList<>();
-		lstStudentCourses.setModel(new AbstractListModel<Course>() {
-
-			@Override
-			public Course getElementAt(int index) {
-				return Course.getCourses().get(index);
-			}
-
-			@Override
-			public int getSize() {
-				return Course.getCourses().size();
-			}
-			
-		});
+		lstStudentCourses.setModel(courseListModel);
 		scrStudentCourses.setViewportView(lstStudentCourses);
 		
 		JPanel employeePanel = new JPanel();
@@ -373,23 +383,30 @@ public class MainFrame extends JFrame {
 		JButton btnCreateEmployee = new JButton("Create");
 		btnCreateEmployee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (rdbtnAcademic.isSelected()) {
-					new AcademicEmployee(txtEmployeeName.getText(),
-							txtEmployeeSurname.getText(),
-							txtEmployeePhone.getText(),
-							(Department)lstEmployeeDepartment.getSelectedItem());
-				} else if (rdbtnAdmin.isSelected()) {
-					new AdminEmployee(txtEmployeeName.getText(),
-							txtEmployeeSurname.getText(),
-							txtEmployeePhone.getText(),
-							(Department)lstEmployeeDepartment.getSelectedItem());
+				try {
+					String name = txtEmployeeName.getText().trim();
+					String surname = txtEmployeeSurname.getText().trim();
+					String phone = txtEmployeePhone.getText().trim();
+					Department department = (Department)lstEmployeeDepartment.getSelectedItem();
+					
+					if (name.equals("") || surname.equals("") || phone.equals("") || lstEmployeeDepartment.getSelectedIndex() == -1) {
+						throw new RuntimeException("Fields cannot be empty!");
+					}
+					
+					if (rdbtnAcademic.isSelected()) {
+						new AcademicEmployee(name, surname, phone, department);
+					} else if (rdbtnAdmin.isSelected()) {
+						new AdminEmployee(name, surname, phone, department);
+					}
+					personListModel.fireExternalElementAdded();
+					txtEmployeeName.setText("");
+					txtEmployeeSurname.setText("");
+					txtEmployeePhone.setText("");
+					lstEmployeeDepartment.setSelectedIndex(-1);
+					rdbtnAdmin.setSelected(true);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
 				}
-				personList.updateUI();
-				txtEmployeeName.setText("");
-				txtEmployeeSurname.setText("");
-				txtEmployeePhone.setText("");
-				lstEmployeeDepartment.setSelectedIndex(-1);
-				rdbtnAdmin.setSelected(true);
 			}
 		});
 		btnCreateEmployee.setBounds(12, 285, 97, 25);
@@ -463,56 +480,21 @@ public class MainFrame extends JFrame {
 		tabpaneLists.addTab("Departments", null, departmentListPane, null);
 		
 		departmentList = new JList<>();
-		departmentList.setModel(new AbstractListModel<Department>() {
-
-			@Override
-			public Department getElementAt(int index) {
-				return Department.getDepartments().get(index);
-			}
-
-			@Override
-			public int getSize() {
-				return Department.getDepartments().size();
-			}
-			
-		});
+		departmentList.setModel(departmentListModel);
 		departmentListPane.setViewportView(departmentList);
 		
 		JScrollPane courseListPane = new JScrollPane();
 		tabpaneLists.addTab("Courses", null, courseListPane, null);
 		
 		courseList = new JList<Course>();
-		courseList.setModel(new AbstractListModel<Course>() {
-
-			@Override
-			public Course getElementAt(int index) {
-				return Course.getCourses().get(index);
-			}
-
-			@Override
-			public int getSize() {
-				return Course.getCourses().size();
-			}
-		});
+		courseList.setModel(courseListModel);
 		courseListPane.setViewportView(courseList);
 		
 		JScrollPane personListPane = new JScrollPane();
 		tabpaneLists.addTab("People", null, personListPane, null);
 		
 		personList = new JList<Person>();
-		personList.setModel(new AbstractListModel<Person>() {
-
-			@Override
-			public Person getElementAt(int index) {
-				return Person.getPersons().get(index);
-			}
-
-			@Override
-			public int getSize() {
-				return Person.getPersons().size();
-			}
-			
-		});
+		personList.setModel(personListModel);
 		personListPane.setViewportView(personList);
 	}
 }
