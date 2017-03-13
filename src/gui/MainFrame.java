@@ -141,7 +141,7 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainFrame() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/icons/appIcon.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/icons/appIcon2.png")));
 		JFrame self = this;
 		
 		setResizable(false);

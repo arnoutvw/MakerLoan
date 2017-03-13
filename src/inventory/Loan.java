@@ -62,7 +62,7 @@ public class Loan {
 	// Methods
 	@Override
 	public String toString() {
-		return String.format("%2$s loaned a %1$s at %3$s",
+		return String.format("[%3$s] Loaned item [%1$s] to [%2$s]",
 				item.getName(),
 				person.getFullName(),
 				loanDate.getTime().toString());
