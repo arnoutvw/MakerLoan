@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import administration.Department;
 
-public class Employee extends Person {
+public abstract class Employee extends Person {
 	// Fields
 	private String employeeID;
 	private static int IDIndex = 0;

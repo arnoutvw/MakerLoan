@@ -21,6 +21,10 @@ public class Loan {
 		loans.add(this);
 	}
 	
+	public Loan(Item item, Person person) {
+		this(item, person, new GregorianCalendar());
+	}
+	
 	public Loan(Loan loan) {
 		this(loan.getItem(), loan.getPerson(), loan.getLoanDate());
 	}
@@ -58,8 +62,7 @@ public class Loan {
 	// Methods
 	@Override
 	public String toString() {
-		return String.format("%1$s[item=%2$s, person=%3$s, loanDate=%4$s]",
-				getClass().getSimpleName(),
+		return String.format("%2$s loaned a %1$s at %3$s",
 				item.getName(),
 				person.getFullName(),
 				loanDate.getTime().toString());

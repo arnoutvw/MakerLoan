@@ -7,17 +7,18 @@ public class Item {
 	// Fields
 	private String name;
 	private int itemID;
+	private static int IDIndex = 0;
 	private static List<Item> items = new ArrayList<>();
 	
 	// Constructors
-	public Item(String name, int itemID) {
+	public Item(String name) {
 		this.name = name;
-		this.itemID = itemID;
+		this.itemID = generateItemID();
 		items.add(this);
 	}
 	
 	public Item(Item item) {
-		this(item.getName(), item.getItemID());
+		this(item.getName());
 	}
 
 	// Getters
@@ -43,10 +44,13 @@ public class Item {
 	}
 
 	// Methods
+	private static int generateItemID() {
+		return ++IDIndex;
+	}
+	
 	@Override
 	public String toString() {
-		return String.format("%1$s[name=%2$s, itemID=%3$d]",
-				getClass().getSimpleName(),
+		return String.format("%2$d: %1$s",
 				name,
 				itemID);
 	}

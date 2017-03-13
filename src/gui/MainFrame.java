@@ -1,10 +1,31 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Comparator;
+import java.util.List;
 
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import administration.Course;
@@ -15,26 +36,10 @@ import hr.AcademicEmployee;
 import hr.AdminEmployee;
 import hr.Person;
 import hr.Student;
-
-import javax.swing.JSplitPane;
-import javax.swing.JLabel;
-import java.awt.CardLayout;
-import javax.swing.JTabbedPane;
-import javax.swing.JComboBox;
-import java.awt.Font;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ItemListener;
-import java.util.List;
-import java.awt.event.ItemEvent;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
+import inventory.Item;
+import inventory.Loan;
+import javax.swing.ListSelectionModel;
+import java.awt.Toolkit;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
@@ -44,18 +49,39 @@ public class MainFrame extends JFrame {
 	private static final String COURSE = "Course";
 	private static final String STUDENT = "Student";
 	private static final String EMPLOYEE = "Employee";
+	private static final String ITEM = "Item";
+	private static final String LOAN = "Loan";
 	
 	private static final String[] CATEGORIES = {
 			DEPARTMENT,
 			COURSE,
 			STUDENT,
-			EMPLOYEE
+			EMPLOYEE,
+			ITEM,
+			LOAN
+	};
+	
+	private static final String SORT_BY_DATE_NEWEST_FIRST = "Date - Newest first";
+	private static final String SORT_BY_DATE_OLDEST_FIRST = "Date - Oldest first";
+	private static final String SORT_BY_NAME_ASCENDING = "Last name A - Å";
+	private static final String SORT_BY_NAME_DESCENDING = "Last name Å - A";
+	
+	private static final String[] SORT_MODES = {
+			SORT_BY_DATE_NEWEST_FIRST,
+			SORT_BY_DATE_OLDEST_FIRST,
+			SORT_BY_NAME_ASCENDING,
+			SORT_BY_NAME_DESCENDING
 	};
 	
 	private DepartmentComboBoxModel departmentComboBoxModel = new DepartmentComboBoxModel();
 	private DepartmentListModel departmentListModel = new DepartmentListModel();
 	private CourseListModel courseListModel = new CourseListModel();
+	// private PersonComboBoxModel personComboBoxModel = new PersonComboBoxModel();
 	private PersonListModel personListModel = new PersonListModel();
+	// private ItemComboBoxModel itemComboBoxModel = new ItemComboBoxModel();
+	private ItemListModel itemListModel = new ItemListModel();
+	private LoanListModel loanListModel = new LoanListModel();
+	
 	
 	private JPanel contentPane;
 	private JTextField txtDepartmentName;
@@ -82,12 +108,23 @@ public class MainFrame extends JFrame {
 	private JRadioButton rdbtnUngraded;
 	private JRadioButton rdbtnAdmin;
 	private JRadioButton rdbtnAcademic;
+	private JTextField txtItemName;
+	private JList<Item> itemList;
+	private JList<Loan> loanList;
+	private JList<Item> lstLoanItem;
+	private JList<Person> lstLoanPerson;
+	private JComboBox<String> loanListSorter;
 
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -104,10 +141,13 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainFrame() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/icons/appIcon.png")));
+		JFrame self = this;
+		
 		setResizable(false);
 		setTitle("MakerLoan WIP");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 460);
+		setBounds(100, 100, 760, 460);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -115,7 +155,7 @@ public class MainFrame extends JFrame {
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setEnabled(false);
-		splitPane.setResizeWeight(0.5);
+		splitPane.setResizeWeight(0.47);
 		contentPane.add(splitPane, BorderLayout.CENTER);
 		
 		JPanel creationPanel = new JPanel();
@@ -176,7 +216,7 @@ public class MainFrame extends JFrame {
 					txtDepartmentName.setText("");
 					txtDepartmentCode.setText("");
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
+					JOptionPane.showMessageDialog(self, ex.getMessage());
 				}
 			}
 		});
@@ -235,7 +275,7 @@ public class MainFrame extends JFrame {
 					lstCourseDepartment.setSelectedIndex(-1);
 					rdbtnGraded.setSelected(true);
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
+					JOptionPane.showMessageDialog(self, ex.getMessage());
 				}
 			}
 		});
@@ -316,7 +356,7 @@ public class MainFrame extends JFrame {
 					lstStudentDepartment.setSelectedIndex(-1);
 					lstStudentCourses.clearSelection();
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
+					JOptionPane.showMessageDialog(self, ex.getMessage());
 				}
 			}
 		});
@@ -405,7 +445,7 @@ public class MainFrame extends JFrame {
 					lstEmployeeDepartment.setSelectedIndex(-1);
 					rdbtnAdmin.setSelected(true);
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
+					JOptionPane.showMessageDialog(self, ex.getMessage());
 				}
 			}
 		});
@@ -463,6 +503,108 @@ public class MainFrame extends JFrame {
 		rdbtnAdmin.setBounds(126, 175, 75, 25);
 		employeePanel.add(rdbtnAdmin);
 		
+		JPanel itemPanel = new JPanel();
+		cardPanel.add(itemPanel, ITEM);
+		itemPanel.setLayout(null);
+		
+		JLabel lblItem = new JLabel("Item");
+		lblItem.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblItem.setBounds(12, 13, 56, 16);
+		itemPanel.add(lblItem);
+		
+		JButton btnCreateItem = new JButton("Create");
+		btnCreateItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String name = txtItemName.getText().trim();
+					
+					if (name.equals("")) {
+						throw new RuntimeException("Fields cannot be empty!");
+					}
+					new Item(name);
+					
+					itemListModel.fireExternalElementAdded();
+					txtItemName.setText("");
+					
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(self, ex.getMessage());
+				}
+			}
+		});
+		btnCreateItem.setBounds(12, 285, 97, 25);
+		itemPanel.add(btnCreateItem);
+		
+		JLabel lblItemName = new JLabel("Name");
+		lblItemName.setBounds(12, 42, 102, 16);
+		itemPanel.add(lblItemName);
+		
+		txtItemName = new JTextField();
+		txtItemName.setBounds(126, 39, 176, 22);
+		itemPanel.add(txtItemName);
+		txtItemName.setColumns(10);
+		
+		JPanel loanPanel = new JPanel();
+		cardPanel.add(loanPanel, LOAN);
+		loanPanel.setLayout(null);
+		
+		JLabel lblLoan = new JLabel("Loan");
+		lblLoan.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblLoan.setBounds(12, 13, 56, 16);
+		loanPanel.add(lblLoan);
+		
+		JButton btnCreateLoan = new JButton("Create");
+		btnCreateLoan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Person person = lstLoanPerson.getSelectedValue();
+					Item item = lstLoanItem.getSelectedValue();
+					
+					if (person.equals(null) || item.equals(null)) {
+						throw new RuntimeException("Fields cannot be empty!");
+					}
+					
+					new Loan(item, person);
+					
+					loanListModel.fireExternalElementAdded();
+					sortLoanList((String)loanListSorter.getSelectedItem());
+					lstLoanPerson.clearSelection();
+					lstLoanItem.clearSelection();
+					
+					
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(self, ex.getMessage());
+				}
+			}
+		});
+		btnCreateLoan.setBounds(12, 285, 97, 25);
+		loanPanel.add(btnCreateLoan);
+		
+		JLabel lblLoanPerson = new JLabel("Person");
+		lblLoanPerson.setBounds(12, 42, 102, 16);
+		loanPanel.add(lblLoanPerson);
+		
+		JScrollPane scrLoanPerson = new JScrollPane();
+		scrLoanPerson.setBounds(126, 42, 176, 90);
+		loanPanel.add(scrLoanPerson);
+		
+		lstLoanPerson = new JList<>();
+		lstLoanPerson.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lstLoanPerson.setModel(personListModel);
+		scrLoanPerson.setViewportView(lstLoanPerson);
+		
+		JScrollPane scrLoanItem = new JScrollPane();
+		scrLoanItem.setBounds(126, 145, 176, 90);
+		loanPanel.add(scrLoanItem);
+		
+		lstLoanItem = new JList<>();
+		lstLoanItem.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lstLoanItem.setModel(itemListModel);
+		scrLoanItem.setViewportView(lstLoanItem);
+		
+		JLabel lblLoanItem = new JLabel("Item");
+		lblLoanItem.setBounds(12, 147, 102, 16);
+		loanPanel.add(lblLoanItem);
+		
 		JPanel viewingPanel = new JPanel();
 		splitPane.setRightComponent(viewingPanel);
 		viewingPanel.setLayout(null);
@@ -473,13 +615,14 @@ public class MainFrame extends JFrame {
 		viewingPanel.add(lblView);
 		
 		JTabbedPane tabpaneLists = new JTabbedPane(JTabbedPane.TOP);
-		tabpaneLists.setBounds(22, 42, 305, 358);
+		tabpaneLists.setBounds(22, 42, 357, 358);
 		viewingPanel.add(tabpaneLists);
 		
 		JScrollPane departmentListPane = new JScrollPane();
 		tabpaneLists.addTab("Departments", null, departmentListPane, null);
 		
 		departmentList = new JList<>();
+		departmentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		departmentList.setModel(departmentListModel);
 		departmentListPane.setViewportView(departmentList);
 		
@@ -487,6 +630,7 @@ public class MainFrame extends JFrame {
 		tabpaneLists.addTab("Courses", null, courseListPane, null);
 		
 		courseList = new JList<Course>();
+		courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		courseList.setModel(courseListModel);
 		courseListPane.setViewportView(courseList);
 		
@@ -494,7 +638,109 @@ public class MainFrame extends JFrame {
 		tabpaneLists.addTab("People", null, personListPane, null);
 		
 		personList = new JList<Person>();
+		personList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		personList.setModel(personListModel);
 		personListPane.setViewportView(personList);
+		
+		JScrollPane itemListPane = new JScrollPane();
+		tabpaneLists.addTab("Items", null, itemListPane, null);
+		
+		itemList = new JList<>();
+		itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		itemList.setModel(itemListModel);
+		itemListPane.setViewportView(itemList);
+		
+		JPanel loanListContainer = new JPanel();
+		tabpaneLists.addTab("Loans", null, loanListContainer, null);
+		loanListContainer.setLayout(null);
+		
+		JLabel lblLoanListSorter = new JLabel("Sort by:");
+		lblLoanListSorter.setBounds(10, 16, 56, 16);
+		loanListContainer.add(lblLoanListSorter);
+		
+		loanListSorter = new JComboBox<>();
+		loanListSorter.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent evt) {
+				sortLoanList((String)evt.getItem());
+			}
+		});
+		loanListSorter.setModel(new DefaultComboBoxModel<String>(SORT_MODES));
+		loanListSorter.setBounds(78, 13, 262, 22);
+		loanListContainer.add(loanListSorter);
+		
+		JScrollPane loanListPane = new JScrollPane();
+		loanListPane.setBounds(10, 48, 330, 229);
+		loanListContainer.add(loanListPane);
+		
+		loanList = new JList<>();
+		loanList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		loanList.setModel(loanListModel);
+		loanListPane.setViewportView(loanList);
+		
+		JButton btnDeleteLoan = new JButton("Return");
+		btnDeleteLoan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				switch (JOptionPane.showConfirmDialog(self, "Are you shure you want to return this loan?", "Confirm loan return", JOptionPane.YES_NO_OPTION)) {
+				case JOptionPane.YES_OPTION:
+					loanListModel.remove(loanList.getSelectedIndex());
+					loanList.clearSelection();
+					break;
+				default:
+					break;
+				}
+			}
+		});
+		btnDeleteLoan.setBounds(243, 290, 97, 25);
+		loanListContainer.add(btnDeleteLoan);
+		
+		// Initial sorting
+		sortLoanList(SORT_BY_DATE_NEWEST_FIRST);
+	}
+	
+	private void sortLoanList(String sortingMode) {
+		switch (sortingMode) {
+		case SORT_BY_DATE_NEWEST_FIRST:
+			loanListModel.sort(new Comparator<Loan>() {
+
+				@Override
+				public int compare(Loan l1, Loan l2) {
+					return l2.getLoanDate().compareTo(l1.getLoanDate());
+				}
+				
+			});
+			break;
+		case SORT_BY_DATE_OLDEST_FIRST:
+			loanListModel.sort(new Comparator<Loan>() {
+
+				@Override
+				public int compare(Loan l1, Loan l2) {
+					return l1.getLoanDate().compareTo(l2.getLoanDate());
+				}
+				
+			});
+			break;
+		case SORT_BY_NAME_ASCENDING:
+			loanListModel.sort(new Comparator<Loan>() {
+
+				@Override
+				public int compare(Loan l1, Loan l2) {
+					return l1.getPerson().getSurName().compareTo(l2.getPerson().getSurName());
+				}
+				
+			});
+			break;
+		case SORT_BY_NAME_DESCENDING:
+			loanListModel.sort(new Comparator<Loan>() {
+
+				@Override
+				public int compare(Loan l1, Loan l2) {
+					return l2.getPerson().getSurName().compareTo(l1.getPerson().getSurName());
+				}
+				
+			});
+			break;
+		default:
+			break;
+		}
 	}
 }
