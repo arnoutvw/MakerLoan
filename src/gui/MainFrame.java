@@ -677,7 +677,7 @@ public class MainFrame extends JFrame {
 		loanList.setModel(loanListModel);
 		loanListPane.setViewportView(loanList);
 		
-		JButton btnDeleteLoan = new JButton("Return");
+		JButton btnDeleteLoan = new JButton("Turn in");
 		btnDeleteLoan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				switch (JOptionPane.showConfirmDialog(self, "Are you shure you want to return this loan?", "Confirm loan return", JOptionPane.YES_NO_OPTION)) {
@@ -700,14 +700,14 @@ public class MainFrame extends JFrame {
 	private void sortLoanList(String sortingMode) {
 		switch (sortingMode) {
 		case SORT_BY_DATE_NEWEST_FIRST:
-			loanListModel.sort(new Comparator<Loan>() {
+			loanListModel.sort(/*new Comparator<Loan>() {
 
 				@Override
 				public int compare(Loan l1, Loan l2) {
 					return l2.getLoanDate().compareTo(l1.getLoanDate());
 				}
 				
-			});
+			}*/);
 			break;
 		case SORT_BY_DATE_OLDEST_FIRST:
 			loanListModel.sort(new Comparator<Loan>() {

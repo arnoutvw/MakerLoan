@@ -1,5 +1,6 @@
 package gui;
 
+import java.util.Collections;
 import java.util.Comparator;
 
 import javax.swing.AbstractListModel;
@@ -25,6 +26,11 @@ public class LoanListModel extends AbstractListModel<Loan> {
 	
 	public void sort(Comparator<Loan> comparator) {
 		Loan.getLoans().sort(comparator);
+		fireContentsChanged(this, 0, Loan.getLoans().size());
+	}
+	
+	public void sort() {
+		Collections.sort(Loan.getLoans());
 		fireContentsChanged(this, 0, Loan.getLoans().size());
 	}
 	

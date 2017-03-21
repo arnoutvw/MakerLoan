@@ -6,7 +6,7 @@ import java.util.List;
 
 import hr.Person;
 
-public class Loan {
+public class Loan implements Comparable<Loan>{
 	// Fields
 	private Item item;
 	private Person person;
@@ -66,5 +66,10 @@ public class Loan {
 				item.getName(),
 				person.getFullName(),
 				loanDate.getTime().toString());
+	}
+
+	@Override
+	public int compareTo(Loan l) {
+		return l.loanDate.compareTo(loanDate);
 	}
 }
