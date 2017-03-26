@@ -1,5 +1,6 @@
 package hr;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,10 @@ import administration.Department;
  * @author KIRODE
  *
  */
-public abstract class Person {
+public abstract class Person implements Serializable {
+
+	private static final long serialVersionUID = -1477534497071913735L;
+	
 	// Fields
 	private String name;
 	private String surName;
@@ -137,7 +141,6 @@ public abstract class Person {
 	public static List<Person> getPersons() {
 		return persons;
 	}
-
 
 	// Setters
 	/**

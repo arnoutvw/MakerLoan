@@ -3,6 +3,9 @@ package hr;
 import administration.Department;
 
 public class AdminEmployee extends Employee {
+	
+	private static final long serialVersionUID = -7752776068762899809L;
+
 	// Constructors
 	public AdminEmployee(String name, String surName, String phone, Department department) {
 		super(name, surName, phone, department);

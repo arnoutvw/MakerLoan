@@ -1,12 +1,16 @@
 package inventory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import hr.Person;
 
-public class Loan implements Comparable<Loan>{
+public class Loan implements Comparable<Loan>, Serializable {
+	
+	private static final long serialVersionUID = -8239847370236173562L;
+	
 	// Fields
 	private Item item;
 	private Person person;
@@ -45,6 +49,7 @@ public class Loan implements Comparable<Loan>{
 	public static List<Loan> getLoans() {
 		return loans;
 	}
+	
 
 	// Setters
 	public void setItem(Item item) {
@@ -72,4 +77,5 @@ public class Loan implements Comparable<Loan>{
 	public int compareTo(Loan l) {
 		return l.loanDate.compareTo(loanDate);
 	}
+	
 }

@@ -38,8 +38,12 @@ import hr.Person;
 import hr.Student;
 import inventory.Item;
 import inventory.Loan;
+import storage.DataSerializer;
+
 import javax.swing.ListSelectionModel;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
@@ -141,6 +145,12 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainFrame() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				DataSerializer.serializeAll();
+			}
+		});
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/icons/appIcon2.png")));
 		JFrame self = this;
 		

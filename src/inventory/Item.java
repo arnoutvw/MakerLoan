@@ -1,9 +1,15 @@
 package inventory;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item {
+public class Item implements Serializable {
+	
+	private static final long serialVersionUID = 8769912126952741976L;
+	
 	// Fields
 	private String name;
 	private int itemID;
@@ -53,5 +59,14 @@ public class Item {
 		return String.format("%2$d: %1$s",
 				name,
 				itemID);
+	}
+
+	public static void incrementIDIndex() {
+		IDIndex++;
+	}
+	
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+		in.defaultReadObject();
+		incrementIDIndex();
 	}
 }

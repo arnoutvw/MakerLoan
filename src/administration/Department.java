@@ -1,9 +1,13 @@
 package administration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Department {
+public class Department implements Serializable {
+	
+	private static final long serialVersionUID = 5035117359182529205L;
+	
 	// Fields
 	private String name;
 	private String code;
@@ -49,5 +53,5 @@ public class Department {
 				name,
 				code);
 	}
-	
+
 }

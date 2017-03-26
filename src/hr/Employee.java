@@ -1,10 +1,15 @@
 package hr;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.regex.Pattern;
 
 import administration.Department;
 
 public abstract class Employee extends Person {
+
+	private static final long serialVersionUID = 6251495121983168919L;
+	
 	// Fields
 	private String employeeID;
 	private static int IDIndex = 0;
@@ -62,5 +67,14 @@ public abstract class Employee extends Person {
 				getPhone(),
 				getDepartment() != null ? getDepartment().getName() : "",
 				employeeID);
+	}
+
+	public static void incrementIDIndex() {
+		IDIndex++;
+	}
+	
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+		in.defaultReadObject();
+		incrementIDIndex();
 	}
 }

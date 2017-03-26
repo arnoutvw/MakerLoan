@@ -1,13 +1,18 @@
 package hr;
 
-import java.util.regex.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import administration.Course;
 import administration.Department;
 
-public class Student extends Person {
+public class Student extends Person{
+
+	
+	private static final long serialVersionUID = -441908050904693853L;
 	// Fields
 	private String studentID;
 	private List<Course> courseList;
@@ -60,14 +65,7 @@ public class Student extends Person {
 	}
 
 	//Setters
-	public void overrideStudentID(String studentID) {
-		Pattern idPattern = Pattern.compile("^\\d{6}$");
-		if (idPattern.matcher(studentID).matches()) {
-			this.studentID = studentID;
-		} else {
-			throw new IllegalArgumentException("Incorrect studentID format.");
-		}
-	}
+	
 	
 	// Methods
 	private static String generateStudentID() {
@@ -80,6 +78,19 @@ public class Student extends Person {
 		return padding + id;
 	}
 	
+	public void overrideStudentID(String studentID) {
+		Pattern idPattern = Pattern.compile("^\\d{6}$");
+		if (idPattern.matcher(studentID).matches()) {
+			this.studentID = studentID;
+		} else {
+			throw new IllegalArgumentException("Incorrect studentID format.");
+		}
+	}
+	
+	public static void incrementIDIndex() {
+		IDIndex++;
+	}
+	
 	@Override
 	public String toString() {
 		return String.format(
@@ -90,5 +101,10 @@ public class Student extends Person {
 				getDepartment() != null ? getDepartment().getName() : "",
 				studentID,
 				courseList);
+	}
+	
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+		in.defaultReadObject();
+		incrementIDIndex();
 	}
 }

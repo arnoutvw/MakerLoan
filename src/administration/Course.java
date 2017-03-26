@@ -1,9 +1,13 @@
 package administration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Course {
+public abstract class Course implements Serializable {
+	
+	private static final long serialVersionUID = 67533932068199863L;
+	
 	// Fields
 	private String name;
 	private String courseID;
