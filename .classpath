@@ -3,5 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="images.jar"/>
+	<classpathentry kind="lib" path="C:/Users/KIRODE/git/commons-lang3-3.5/commons-lang3-3.5.jar" sourcepath="C:/Users/KIRODE/git/commons-lang3-3.5/commons-lang3-3.5-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/KIRODE/git/commons-lang3-3.5/commons-lang3-3.5-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

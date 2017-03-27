@@ -1,5 +1,9 @@
 package app;
 
+import java.io.File;
+
+import org.apache.commons.lang3.SystemUtils;
+
 import administration.Course;
 import administration.Department;
 import hr.Person;
@@ -10,33 +14,32 @@ import storage.DataSerializer;
 public class App {
 	
 	public static void main(String[] args) {
-//		Department it = new Department("Informasjonsteknologi", "IT");
-//		Course oop = new GradedCourse("Objektorientert programmering", "OOP", it);
-//		new GradedCourse("Databaser", "DB", it);
-//		
-//		Student me = new Student("Kim Roar Stenvard", "Dehli", "46828919", it, Arrays.asList(new Course[]{oop}));
-//		Employee teach = new AcademicEmployee("Per", "Bisseberg", "00000000", it);
-//		Student bear = new Student("Bjørnar", "Hagen", "00000000", it, Arrays.asList(new Course[]{oop}));
-//		
-//		Item arduino = new Item("Arduino");
-//		Item printer3D = new Item("3D Printer");
-//		new Loan(arduino, me, new GregorianCalendar(2017, 2, 4));
-//		new Loan(arduino, teach, new GregorianCalendar(2017, 1, 12));
-//		new Loan(printer3D, me, new GregorianCalendar(2016, 11, 6));
-//		new Loan(printer3D, bear);
 		
+		String dataPath = generateAppDataPath("MakerLoan");
 
-		DataSerializer.add(Department.getDepartments(), System.getProperty("user.dir") + "\\departments.ser");
-		DataSerializer.add(Course.getCourses(), System.getProperty("user.dir") + "\\courses.ser");
-		DataSerializer.add(Person.getPersons(), System.getProperty("user.dir") + "\\persons.ser");
-		DataSerializer.add(Item.getItems(), System.getProperty("user.dir") + "\\items.ser");
-		DataSerializer.add(Loan.getLoans(), System.getProperty("user.dir") + "\\loans.ser");
+		DataSerializer.add(Department.getDepartments(), dataPath + File.separator + "departments.ser");
+		DataSerializer.add(Course.getCourses(), dataPath + File.separator + "courses.ser");
+		DataSerializer.add(Person.getPersons(), dataPath + File.separator + "persons.ser");
+		DataSerializer.add(Item.getItems(), dataPath + File.separator + "items.ser");
+		DataSerializer.add(Loan.getLoans(), dataPath + File.separator + "loans.ser");
 
 		DataSerializer.deserializeAll();
 		
 		gui.MainFrame.main(new String[0]);
 	}
 	
-	
-
+	public static String generateAppDataPath(String folderName) {
+		String path = "";
+		
+		if (SystemUtils.IS_OS_WINDOWS) {
+			path = SystemUtils.USER_HOME + File.separator + 
+					"AppData" + File.separator + 
+					"Roaming" + File.separator + folderName;
+			
+		} else if (SystemUtils.IS_OS_UNIX) {
+			path = SystemUtils.USER_HOME + File.separator + "." + folderName;
+		}
+		new File(path).mkdirs();
+		return path;
+	}
 }
