@@ -1,2 +1,13 @@
+# Eclipse project files
+.settings/
+.classpath
+.project
+
+# Binary files
 bin/
-*.ser
+
+# StarUML files
+*.mdj
+
+# Dependencies
+common-lang3-3.5/
