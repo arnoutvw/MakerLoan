@@ -1,7 +1,7 @@
 # Eclipse project files
-.settings/
-.classpath
-.project
+\.settings/
+\.classpath
+\.project
 
 # Binary files
 bin/
@@ -11,3 +11,7 @@ bin/
 
 # Dependencies
 commons-lang3-3\.5/
+
+# Gradle
+build/
+\.gradle/

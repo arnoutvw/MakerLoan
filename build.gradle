@@ -1,0 +1,17 @@
+apply plugin : 'java'
+apply plugin : 'eclipse'
+
+jar {
+	manifest {
+		attributes 'Class-Path': 'no.hiof.itstud.krdehli.makerloan.app.App'
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+	compile files('./src/main/resources/no/hiof/itstud/krdehli/makerloan/images.jar')
+}
