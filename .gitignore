@@ -10,4 +10,4 @@ bin/
 *.mdj
 
 # Dependencies
-common-lang3-3.5/
+commons-lang3-3\.5/
